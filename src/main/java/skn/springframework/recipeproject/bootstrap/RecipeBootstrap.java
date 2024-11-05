@@ -1,5 +1,7 @@
 package skn.springframework.recipeproject.bootstrap;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import skn.springframework.recipeproject.models.*;
 import skn.springframework.recipeproject.repositories.CategoryRepository;
 import skn.springframework.recipeproject.repositories.RecipeRepository;
@@ -13,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -20,14 +24,9 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
 
-    public RecipeBootstrap(CategoryRepository categoryRepository, RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
-        this.categoryRepository = categoryRepository;
-        this.recipeRepository = recipeRepository;
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
-    }
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        log.debug("Saving all recipes made in RecipeBootstrap");
         recipeRepository.saveAll(getRecipes());
     }
 
@@ -36,43 +35,56 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         List<Recipe> recipes = new ArrayList<>(2);
 
         //get UOMs
+        log.debug("Looking for 'Each' UOM in DB");
         Optional<UnitOfMeasure> eachUomOptional = unitOfMeasureRepository.findByDescription("Each");
 
         if (!eachUomOptional.isPresent()) {
+            log.debug("'Each' UOM is not present in DB");
             throw new RuntimeException("Expected UOM not Found");
         }
 
+        log.debug("Looking for 'Tablespoon' UOM in DB");
         Optional<UnitOfMeasure> tableSpoonUomOptional = unitOfMeasureRepository.findByDescription("Tablespoon");
 
         if (!tableSpoonUomOptional.isPresent()) {
+            log.debug("'Tablespoon' UOM is not present in DB");
             throw new RuntimeException("Expected UOM not Found");
         }
 
+        log.debug("Looking for 'Teaspoon' UOM in DB");
         Optional<UnitOfMeasure> teaSpoonUomOptional = unitOfMeasureRepository.findByDescription("Teaspoon");
 
         if (!teaSpoonUomOptional.isPresent()) {
+            log.debug("'Teaspoon' UOM is not present in DB");
             throw new RuntimeException("Expected UOM not Found");
         }
 
+        log.debug("Looking for 'Dash' UOM in DB");
         Optional<UnitOfMeasure> dashUomOptional = unitOfMeasureRepository.findByDescription("Dash");
 
         if (!dashUomOptional.isPresent()) {
+            log.debug("'Dash' UOM is not present in DB");
             throw new RuntimeException("Expected UOM not Found");
         }
 
+        log.debug("Looking for 'Pint' UOM in DB");
         Optional<UnitOfMeasure> pintUomOptional = unitOfMeasureRepository.findByDescription("Pint");
 
         if (!pintUomOptional.isPresent()) {
+            log.debug("'Pint' UOM is not present in DB");
             throw new RuntimeException("Expected UOM not Found");
         }
 
+        log.debug("Looking for 'Cup' UOM in DB");
         Optional<UnitOfMeasure> cupsUomOptional = unitOfMeasureRepository.findByDescription("Cup");
 
         if(!cupsUomOptional.isPresent()){
+            log.debug("'Cup' UOM is not present in DB");
             throw new RuntimeException("Expected UOM Not Found");
         }
 
         //get optionals
+        log.debug("Getting optionals for UOM");
         UnitOfMeasure eachUom = eachUomOptional.get();
         UnitOfMeasure tableSpoonUom = tableSpoonUomOptional.get();
         UnitOfMeasure teapoonUom = tableSpoonUomOptional.get();
@@ -81,22 +93,28 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         UnitOfMeasure cupsUom = cupsUomOptional.get();
 
         //get Categories
+        log.debug("Looking for 'American' Category in DB");
         Optional<Category> americanCategoryOptional = categoryRepository.findByCategoryName("American");
 
         if(!americanCategoryOptional.isPresent()){
+            log.debug("'American' Category is not present in DB");
             throw new RuntimeException("Expected Category Not Found");
         }
 
+        log.debug("Looking for 'Mexican' Category in DB");
         Optional<Category> mexicanCategoryOptional = categoryRepository.findByCategoryName("Mexican");
 
         if(!mexicanCategoryOptional.isPresent()){
+            log.debug("'Mexican' Category is not present in DB");
             throw new RuntimeException("Expected Category Not Found");
         }
 
+        log.debug("Getting optionals for Categories");
         Category americanCategory = americanCategoryOptional.get();
         Category mexicanCategory = mexicanCategoryOptional.get();
 
         //Yummy Guac
+        log.debug("Creating recipe 'Guac' and setting it's parameters");
         Recipe guacRecipe = new Recipe();
         guacRecipe.setDescription("Perfect Guacamole");
         guacRecipe.setPrepTime(10);
@@ -126,6 +144,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         //guacNotes.setRecipe(guacRecipe);
         guacRecipe.setNotes(guacNotes);
 
+        log.debug("Adding ingredients to 'Guac' recipe");
         guacRecipe.addIngredient(new Ingredient("ripe avocados", new BigDecimal(2), eachUom));
         guacRecipe.addIngredient(new Ingredient("Kosher salt", new BigDecimal(".5"), teapoonUom));
         guacRecipe.addIngredient(new Ingredient("fresh lime juice or lemon juice", new BigDecimal(2), tableSpoonUom));
@@ -142,6 +161,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         recipes.add(guacRecipe);
 
         //Yummy Tacos
+        log.debug("Creating recipe 'Tacos' and setting it's parameters");
         Recipe tacosRecipe = new Recipe();
         tacosRecipe.setDescription("Spicy Grilled Chicken Taco");
         tacosRecipe.setCookTime(9);
@@ -173,7 +193,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         //tacoNotes.setRecipe(tacosRecipe);
         tacosRecipe.setNotes(tacoNotes);
 
-
+        log.debug("Adding ingredients to 'Tacos' recipe");
         tacosRecipe.addIngredient(new Ingredient("Ancho Chili Powder", new BigDecimal(2), tableSpoonUom));
         tacosRecipe.addIngredient(new Ingredient("Dried Oregano", new BigDecimal(1), teapoonUom));
         tacosRecipe.addIngredient(new Ingredient("Dried Cumin", new BigDecimal(1), teapoonUom));
@@ -199,8 +219,5 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
         recipes.add(tacosRecipe);
         return recipes;
-
-
     }
-
 }

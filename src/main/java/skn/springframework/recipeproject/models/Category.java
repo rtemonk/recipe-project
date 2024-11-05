@@ -1,9 +1,14 @@
 package skn.springframework.recipeproject.models;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.util.Set;
 
+@Data
 @Entity
+@EqualsAndHashCode(exclude = {"recipe"})
 public class Category {
 
     @Id
@@ -11,30 +16,7 @@ public class Category {
     private Long id;
     private String categoryName;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories")
     private Set<Recipe> recipes;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public Set<Recipe> getRecipes() {
-        return recipes;
-    }
-
-    public void setRecipes(Set<Recipe> recipes) {
-        this.recipes = recipes;
-    }
 }

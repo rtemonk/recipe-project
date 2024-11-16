@@ -1,5 +1,6 @@
 package skn.springframework.recipeproject.services;
 
+import skn.springframework.recipeproject.commands.RecipeCommand;
 import skn.springframework.recipeproject.converters.RecipeCommandToRecipe;
 import skn.springframework.recipeproject.converters.RecipeToRecipeCommand;
 import skn.springframework.recipeproject.models.Recipe;
@@ -41,7 +42,9 @@ class RecipeServiceImplTest {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
+
         when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
         Recipe recipeReturned = recipeService.findById(1L);
         assertNotNull("Null recipe returned", String.valueOf(recipeReturned));
         verify(recipeRepository, times(1)).findById(anyLong());
@@ -49,7 +52,26 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void getRecipes() throws Exception {
+    public void getRecipeCommandByIdTest() throws Exception {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        RecipeCommand commandById = recipeService.findCommandById(1L);
+
+        verify(recipeRepository, times(1)).findById(anyLong());
+        verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    void getRecipesTest() throws Exception {
         Recipe recipe = new Recipe();
         HashSet recipesData = new HashSet();
         recipesData.add(recipe);
@@ -60,5 +82,15 @@ class RecipeServiceImplTest {
         assertEquals(recipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
         verify(recipeRepository, never()).findById(anyLong());
+    }
+
+    @Test
+    void deleteById() throws Exception{
+        //given
+        Long idToDelete = Long.valueOf(2L);
+        //when
+        recipeService.deleteById(idToDelete);
+        //then
+        verify(recipeRepository, times(1)).deleteById(anyLong());
     }
 }

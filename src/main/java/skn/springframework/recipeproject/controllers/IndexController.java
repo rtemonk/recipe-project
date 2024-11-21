@@ -2,10 +2,10 @@ package skn.springframework.recipeproject.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import skn.springframework.recipeproject.services.RecipeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -14,7 +14,7 @@ public class IndexController {
 
     private final RecipeService recipeService;
 
-    @RequestMapping({"", "/", "index"})
+    @GetMapping({"", "/", "index"})
     public String getIndexPage(Model model) {
         log.debug("getIndexPage before setting attribute to model");
         model.addAttribute("recipes", recipeService.getRecipes());

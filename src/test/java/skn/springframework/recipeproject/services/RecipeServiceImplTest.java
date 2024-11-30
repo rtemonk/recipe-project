@@ -3,6 +3,7 @@ package skn.springframework.recipeproject.services;
 import skn.springframework.recipeproject.commands.RecipeCommand;
 import skn.springframework.recipeproject.converters.RecipeCommandToRecipe;
 import skn.springframework.recipeproject.converters.RecipeToRecipeCommand;
+import skn.springframework.recipeproject.exceptions.NotFoundException;
 import skn.springframework.recipeproject.models.Recipe;
 import skn.springframework.recipeproject.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +50,16 @@ class RecipeServiceImplTest {
         assertNotNull("Null recipe returned", String.valueOf(recipeReturned));
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void getRecipeByIdNotFoundTest() throws Exception {
+        Optional<Recipe> recipeOptional = Optional.empty();
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+        assertThrows(NotFoundException.class, () -> {
+            recipeService.findById(1L);
+        });
     }
 
     @Test

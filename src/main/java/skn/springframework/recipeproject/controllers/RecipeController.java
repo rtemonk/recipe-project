@@ -1,10 +1,13 @@
 package skn.springframework.recipeproject.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import skn.springframework.recipeproject.commands.RecipeCommand;
+import skn.springframework.recipeproject.exceptions.NotFoundException;
 import skn.springframework.recipeproject.services.RecipeService;
 
 @Slf4j
@@ -46,5 +49,31 @@ public class RecipeController {
         log.debug("Deleting id: " + id);
         recipeService.deleteById(Long.valueOf(id));
         return "redirect:/";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound(Exception e) {
+        log.error("Handling not found exception");
+        log.error(e.getMessage());
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("404error");
+        modelAndView.addObject("exception", e);
+
+        return modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NumberFormatException.class)
+    public ModelAndView handleNumberFormat(Exception e) {
+        log.error("Handling Number Format Exception");
+        log.error(e.getMessage());
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("400error");
+        modelAndView.addObject("exception", e);
+
+        return modelAndView;
     }
 }

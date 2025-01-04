@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>skn.springframework</groupId>
+    <groupId>rtemonk.springframework</groupId>
     <artifactId>recipe-project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>recipe-project</name>

@@ -14,6 +14,6 @@ Current state: H2 is done, MySQL is currently not working. CRUD recipes & ingred
  - JUnit 5 + Mockito
  - Thymeleaf
 
-![Image 1](https://i.imgur.com/a/m7XuBWA.png)
-![Image 2](https://i.imgur.com/a/Rj3xjOR.png)
-![Image 3](https://i.imgur.com/a/OyM8J3J.png)
+![Image 1](https://imgur.com/a/m7XuBWA)
+![Image 2](https://imgur.com/a/Rj3xjOR)
+![Image 3](https://imgur.com/a/OyM8J3J)

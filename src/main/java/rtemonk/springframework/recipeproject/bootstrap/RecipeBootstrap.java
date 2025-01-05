@@ -2,6 +2,7 @@ package rtemonk.springframework.recipeproject.bootstrap;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import rtemonk.springframework.recipeproject.models.*;
 import rtemonk.springframework.recipeproject.repositories.CategoryRepository;
 import rtemonk.springframework.recipeproject.repositories.RecipeRepository;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Component
+@Profile("default")
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final CategoryRepository categoryRepository;
